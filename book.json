@@ -1,0 +1,178 @@
+{
+    "root": "./fuck-leetcode",
+    "author": "Chengwei Yang <me@chengweiyang.cn>",
+    "description": "This is a sample book created by gitbook",
+    "title": "Sample GitBook",
+    "extension": null,
+    "links": {
+        "sharing": {
+            "all": null,
+            "facebook": null,
+            "google": null,
+            "twitter": null,
+            "weibo": null
+        },
+        "sidebar": {
+            "打铁的搬砖工😊": "https://jackymxp.github.io/"
+        }
+    },
+    "output": null,
+    "pdf": {
+        "fontSize": 12,
+        "footerTemplate": null,
+        "headerTemplate": null,
+        "margin": {
+            "bottom": 36,
+            "left": 62,
+            "right": 62,
+            "top": 36
+        },
+        "pageNumbers": true,
+        "paperSize": "a4"
+    },
+    "styles": {
+        "website": "styles/website.css",
+        "ebook": "styles/ebook.css",
+        "pdf": "styles/pdf.css",
+        "mobi": "styles/mobi.css",
+        "epub": "styles/epub.css"
+    },
+    "variables": {},
+    
+    "plugins": [
+        "flexible-alerts",
+        "-mathjax",
+        "katex",
+        "favicon",
+        "anchor-navigation-ex",
+        "donate",
+        "klipse",
+        "pageview-count",
+        "-change_girls",
+        "-copy-code-button",
+        "chapter-fold",
+        "-back-to-top-button",
+        "sectionx",
+        "emphasize",
+        "advanced-emoji",
+        "edit-link",
+        "todo",
+        "sharing",
+        "github",
+        "tbfed-pagefooter",
+        "-page-copyright",
+        "splitter",
+        "-lunr", "-search", "search-plus",
+        "insert-logo"
+    ],
+
+
+    "pluginsConfig": {
+
+        "anchor-navigation-ex": {
+            "showLevel": true,
+            "associatedWithSummary": true,
+            "isRewritePageTitle": false,
+            "float": {
+              "showLevelIcon": false,
+              "level1Icon": "fa fa-hand-o-right",
+              "level2Icon": "fa fa-hand-o-right",
+              "level3Icon": "fa fa-hand-o-right"
+            },
+            "pageTop": {
+              "showLevelIcon": false,
+              "level1Icon": "fa fa-hand-o-right",
+              "level2Icon": "fa fa-hand-o-right",
+              "level3Icon": "fa fa-hand-o-right"
+            }
+        },
+
+
+
+        "change_girls" : {
+            "time" : 10,
+            "urls" : [
+                "https://tva1.sinaimg.cn/large/00831rSTly1gcpyiyqwxgj32o00u04qs.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTly1gcq2cmvk2ej31c00u0n5o.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTly1gcq2lmxiojj31c00u0qc1.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTly1gcq2s5p1e6j31hc0u07a8.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTly1gcq2wsax9aj31hc0u0npd.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTgy1gcqc3wqzm6j31c00u01c7.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTgy1gcqc4vyx28j31c00u0x6s.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTgy1gcqc5fsna2j31hc0u0wz5.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTgy1gcqc3yyqpvj31c00u0qns.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTly1gcramnov1bj30u012ae81.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTly1gcramn096kj313o0u07wk.jpg",
+                "https://tva1.sinaimg.cn/large/00831rSTly1gcramlfmzwj30u0190u0x.jpg"
+            ]
+        },
+
+
+        "github": {
+            "url": "https://github.com/jackymxp"
+        },
+
+        "insert-logo": {
+            "url": "https://tva1.sinaimg.cn/large/007S8ZIlly1ge2orqu3skj30e80e80ur.jpg",
+            "style": "background: none; max-height: 30px; min-height: 30px"
+          },
+
+        "tbfed-pagefooter": {
+            "copyright":"Copyright &copy Jackymxp",
+            "modify_label": "该文件修订时间：",
+            "modify_format": "YYYY-MM-DD HH:mm:ss"
+        },
+        "page-copyright": {
+            "description": "modified at",
+            "signature": "公众号：打铁的搬砖工",
+            "wisdom": "扫描二维码关注微信公众号，获取本站的 PDF，东哥手把手带你撕 LeetCode，感受支配算法的快感，来快活啊～",
+            "format": "YYYY-MM-dd hh:mm:ss",
+            "copyright": "Copyright &#169; 打铁的搬砖工",
+            "timeColor": "#666",
+            "copyrightColor": "#666",
+            "utcOffset": "8",
+            "style": "normal",
+            "noPowered": false
+          },
+
+        "sharing": {
+            "weibo": true,
+            "facebook": true,
+            "twitter": true,
+            "google": false,
+            "instapaper": false,
+            "vk": false,
+            "all": [
+                "facebook", "google", "twitter",
+                    "weibo", "instapaper"
+            ]
+        },
+
+
+        "simple-page-toc": {
+                    "maxDepth": 3,
+                    "skipFirstH1": true
+                },
+
+        "sectionx": {
+            "tag": "b"
+          },
+
+
+
+        "edit-link": {
+            "base": "https://github.com/USER/REPO/edit/BRANCH",
+            "label": "Edit This Page"
+        },
+
+        "donate": {
+            "wechat": "https://tva1.sinaimg.cn/large/007S8ZIlly1ge2ui2nvfoj30ht0hamz4.jpg",
+            "alipay": "https://tva1.sinaimg.cn/large/007S8ZIlly1ge2uhwarkej309e09pmya.jpg",
+            "title": "",
+            "button": "赏",
+            "alipayText": "支付宝打赏",
+            "wechatText": "微信打赏"
+        }
+
+    }  
+}
