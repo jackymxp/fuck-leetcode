@@ -1,6 +1,6 @@
 # Summary
-* [前言](README.md)
 
+* [前言](README.md)
 
 * [1、提升代码的鲁棒性-链表专题](01-链表专题/README.md)
     * [1.1、如何编写递归](01-链表专题/01-如何编写递归.md)
@@ -29,3 +29,12 @@
     * [Better tools for authors](03-动态规划/better_tools.md)
 
 
+=======
+
+* [Part I](part1/README.md)
+    * [Writing is nice](part1/writing.md)
+    * [GitBook is nice](part1/gitbook.md)
+* [Part II](part2/README.md)
+    * [We love feedback](part2/feedback_please.md)
+    * [Better tools for authors](part2/better_tools.md)
+>>>>>>> 14934d30e269d2173e893344dc4c7ae19151ec97

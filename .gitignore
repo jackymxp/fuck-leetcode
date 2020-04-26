@@ -6,6 +6,7 @@ node_modules
 ehthumbs.db
 Icon?
 Thumbs.db
+*.icloud
 
 # Prerequisites
 *.d
