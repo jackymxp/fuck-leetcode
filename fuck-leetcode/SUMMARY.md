@@ -9,12 +9,12 @@
     * [1.4、链表合并问题](01-链表专题/04-链表合并问题.md)
 
 
-* [2、大局意识的培养-二叉树](02-树/README.md)
-    * [We love feedback](02-树/feedback_please.md)
-    * [Better tools for authors](02-树/better_tools.md)
+* [2、大局意识的培养-树专题](02-树/README.md)
+    * [2.1、深入递归函数运行机制](02-树/01-深入递归函数运行机制.md)
+    * [2.2、树专题解题框架](02-树/02-树专题解题框架.md)
 
 
-* [3、开始发育-动态规划与递归](03-动态规划/README.md)
+<!-- * [3、开始发育-动态规划与递归](03-动态规划/README.md)
     * [We love feedback](03-动态规划/feedback_please.md)
     * [Better tools for authors](03-动态规划/better_tools.md)
 
@@ -26,15 +26,4 @@
 
 * [5.蓦然回首-再谈递归](03-动态规划/README.md)
     * [We love feedback](03-动态规划/feedback_please.md)
-    * [Better tools for authors](03-动态规划/better_tools.md)
-
-
-=======
-
-* [Part I](part1/README.md)
-    * [Writing is nice](part1/writing.md)
-    * [GitBook is nice](part1/gitbook.md)
-* [Part II](part2/README.md)
-    * [We love feedback](part2/feedback_please.md)
-    * [Better tools for authors](part2/better_tools.md)
->>>>>>> 14934d30e269d2173e893344dc4c7ae19151ec97
+    * [Better tools for authors](03-动态规划/better_tools.md) -->
