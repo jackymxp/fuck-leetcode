@@ -1,0 +1,806 @@
+本文较长，如果一次读不完，可以收藏。如果想快速知道本文讲的是什么，请先看总结部分。但是我相信你看完本文，一定会有所收获的，如果没有，我给你邮口罩。
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 20%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://tva1.sinaimg.cn/large/007S8ZIlly1ge7aqtlbnsj30rs0pcwgw.jpg" 
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">给你邮口罩</div>
+</center>
+
+# 我理解递归的过程
+我觉得有必要交代一下我自己对于递归的理解的过程，因为我相信会有很多人和我有一样的心路历程。其实一开始我是拒绝递归的，我是不理解也不愿意理解递归；随着学习的加深，递归是避免不了的，就慢慢看别人的递归代码，知道递归是什么意思并如何编写递归；最后我发现递归真是一个大杀器，我喜欢递归的简洁。不仅是代码的简洁，还有思考层面的简洁。
+
+这里直接引用《肖申克的救赎》中的一句台词，形容我对于递归的认识过程。
+
+> [!NOTE|lable:Mylable|labelVisibility:visible|iconVisibility:hidden]
+> These walls are kind of funny like that. First you hate them, then you get used to them. Enough time passed, get so you depend on them. That's institution alized.
+> 
+> 这些高墙真的很有趣，一开始你憎恨他们，然后你慢慢习惯他们，最后你不得不依赖他们而生存，这就是体制化。
+
+用中文描述我的心路历程就很简单了。
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://cdn.jsdelivr.net/gh/jackymxp/image-bed/design-pattern/u=1882634846,423550706&fm=26&gp=0.jpg" 
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">递归真香</div>
+</center>
+
+前言中介绍了王国维的读书三个境界，那么按照这三个境界，谈一下我是怎么理解递归的。
+> [!DANGER|style:flat|lable:Mylable|labelVisibility:visible|iconVisibility:visible]
+> **理解递归的核心就是放弃，放弃刨根问底的精神，不要探索在递归函数内部是如何运行的，而是相信递归能够完成我们定义的功能，而信任的基础在于数学**。
+
+当我按照这种心态编写递归函数的时候，给我的感觉总是那么不踏实，这种感觉似曾相识，后来我猛然发现，这种感觉就是当我高中学习数学归纳法的时候，那种类似作弊的感觉，也不知道为啥，反正就是成立的。为了能够理解递归，所以先来回顾一下数学归纳法的步骤：
+> 1. 验证当$$n=1$$时，显然成立。
+> 
+> 2. 假设当$$n=k$$时，依然成立。
+> 
+> 3. 证明当$$n=k+1$$时，证明等式依然是成立的。这一步比较难。
+
+**数学归纳法的核心就是在已知$$f(n)$$的基础上，找出$$f(n)$$和$$f(n-1)$$之间的关系，这也是编写递归函数的核心**。
+
+按照数学归纳法的三个步骤，说下编写递归函数的三个步骤。
+
+> [!NOTE|style:flat]
+> 1. **对应数学归纳法中的第一条，明确递归函数的退出条件**，如果递归函数没有退出条件，一直递归下去的结果就是爆栈。
+> 2. **对应数学归纳法中的第二条，明确递归函数的功能，入口参数、返回值都表示什么意思**。这一点在编写的时候，一定要牢牢记住这点。这点才是真正的核心。
+> 
+> 3. {% em %}**对应数学归纳法中的第三条，将原数据划分为几个层，梳理各个层之间的关系**。{% endem %}类似数学归纳法中找出$$f(n)$$和$$f(n-1)$$的关系。这步大体上仍分为三小步，第一步一般是将规模为$$n$$的数据拆分成两个或者多个规模更小的数据，在这里假设拆分成$$k$$和$$n-k$$两个部分；第二步将数据规模为$$n-k$$的数据仍然作为递归的参数，当递归函数执行完的时候，按照递归的功能的时候，就得到了规模为$$n-k$$部分的期望答案。前面所说的放弃思考，就是指的是这里，直接放弃思考为什么规模为$$n-k$$部分就得到了期望的答案，而是把$$n-k$$部分的答案作为已知条件，在此基础上进行求解；第三步是根据$$n-k$$部分得到的答案，与规模为$$k$$的部分进行融合，使整个数据得到期望的答案。这里把我们期望的答案看成是一层，对应数学归纳法中的$$f(n)$$，把已经变成期望结构的$$n-k$$部分看成是另外一层，对应数学归纳法中的$$f(n-1)$$，所以这个过程的核心就是寻找层与层之间的关系。
+> 至于为什么要缩小数据规模呢？就是为了让递归函数执行的时候向着递归退出条件上靠，每次往递归退出条件上靠的越快，递归执行的次数就越少。如果将数据拆分成$$k$$和$$n-k$$两部分，每次移动的步数是$$k$$步。
+
+请仔细理解上面所说的要点和步骤，总结一下上面说的，**理解递归的要点在于放弃刨根问底的精神，编写递归函数的核心和数学归纳法步骤一样**。下面再用几个例题帮助理解上面说的步骤。
+
+# 理解编写递归的核心-层与层之间的关系
+
+## 阶乘问题
+- 问题描述
+
+编写`int factorial(int n)`函数，求解$$n$$的阶乘
+
+我们按照编写递归的三个步骤，求解这个问题。
+
+**1. 定义递归函数`int factorial(int n)`的功能，明确参数以及返回值的含义**。
+
+这个函数的功能很简单，当参数为$$n$$的时候，就计算$$n$$的阶乘；当参数为$$n-1$$的时候，就计算$$n-1$$的阶乘，并返回计算后的结果。
+
+**2. 确定递归的退出条件**
+
+因为我们要拆分数据$$n$$，所以当$$n$$不可再拆分的时候，此时就是递归函数的退出条件了，所以当$$n=1$$或者$$n=0$$的时候，就是递归退出的条件，此时应该返回$$0!$$或者$$1!$$，数值为1。写成代码。
+```cpp
+if(n == 0 || n == 1)
+    return 1;
+```
+
+**3. 划分数据为多层，并梳理层与层之间的关系**。
+
+想一下，这里的数据规模是什么，就一个参数$$n$$，其数值就是数据的规模$$n$$，所以在这里要将$$n$$进行拆分，为了使其向递归退出条件靠近。
+
+那么具体怎么拆分呢？这里又有很多方法了。但是根据数学知识我们知道，$$n!=n*(n-1)!$$，那么问题来了，怎么用代码计算$$(n-1)!$$呢？按照我们定义的递归函数的功能，只需要调用`factorial(n-1)`就完成了$$(n-1)!$$的计算。
+
+前面已经说过了，这里千万不要陷进去想，为什么函数`factorial(n-1)`就可以计算$$(n-1)!$$的阶乘，在这里就需要放弃。我们要做的是在已知$$(n-1)!$$的基础上求解$$n!$$。而$$n!$$与$$(n-1)!$$之间相差一个$$n$$。所以把这个$$n$$称为层与层之间的关系。
+
+所以把上述过程写成完整的代码
+```cpp
+int factorial(int n){
+    if(n == 0 || n == 1)
+        return 1;
+    //这个n就是层与层之间的桥梁。
+    return n * factorial(n-1);
+}
+```
+
+**4. 思考**
+
+上面的数据划分方式，每调用一次递归函数，就向着递归退出条件靠近一步。如果是计算$$n$$的阶乘，就需要调用$$n$$次递归函数。
+
+这里想一下，难道真的只有一种划分数据的方式吗，难道每次调用递归函数之后，数据的规模只能减少$$1$$吗？如果每次让数据规模都减少2，应该是怎么样的。根据数学知识我们还可以这样计算$$n!$$。
+
+$$n!=n*(n-1)*(n-2)!$$。
+
+问题来了，如何使用代码计算$$(n-2)!$$呢？如果你没有忘记递归函数的功能的话，这是不是很简单就写出来了`factorial(n-2)`。如果不知道的话，睡一觉休息一下再看。
+
+再考虑一下递归的退出条件是不是要改变呢？如果每次递归规模都缩小$$2$$的话，也就是说每次以2步的速度向着递归退出条件靠近。如果计算$$n!$$，只需要调用$$n/2$$次递归函数了。在2以内的数都不会参与到递归中，所以要将$$2$$以内的数都作为递归退出条件。
+
+将上述过程写成代码
+```cpp
+int factorial(int n){
+    if(n == 0 || n == 1)
+        return 1;
+    return n * (n - 1) * factorial(n-2);
+}
+```
+
+如果我们每次都将递归的规模都缩小$$3$$的话，将$$n!$$采用如下的方式计算
+
+$$n!=n*(n-1)*(n-2)*(n-3)!$$
+
+那么我们的递归退出条件和递归本体又是什么样子的呢？仿照上面的分析，递归的退出条件要加上$$n=2$$这步。每次以$$3$$步的速度向递归退出条件靠近，也就是说计算$$n!$$需要调用$$n/3$$次递归函数。
+
+所以写成代码
+```cpp
+int factorial(int n){
+    if(n == 0 || n == 1)
+        return 1;
+    if(n == 2)
+        return 2;
+    return n * (n-1) * (n-2) * factorial(n-3);
+}
+```
+
+再极端考虑一下，如果我们不调用递归函数，将$$n!$$使用下面的公式计算。
+
+$$n!=n*(n-1)*(n-2)*...*(n-(n-1))$$
+
+此时我们的递归退出条件是什么？是不是要根据$$n$$的不同，将结果都罗列出来，但是发现并没有递归的本体，全是递归退出条件了，所以这就是迭代代码。
+```cpp
+int factorial(int n){
+    if(n  == 0 || n == 1)
+        return 1;
+    if(n == 2)
+        return 2;
+    if(n == 3)
+        return 6;
+    //....
+}
+```
+
+所以这一看用`if`语句实现不了啊，所以改成循环语句实现。
+```cpp
+int factorial(int n){
+    int res = 1;
+    for(int i = 1; i <= n; i++)
+        res *= i;
+    return res;
+}
+```
+
+**5. 总结**
+
+虽然这个例子很简单，但是却是我们第一个按照套路一步一步编写出来的递归代码，并且通过改变划分数据的方式，逐步减少递归函数调用的次数，当到达极限的时候，就将递归的代码改成迭代的代码。同时也看到不同的划分数据的方式，递归函数的本体和退出条件也都是不同的。可以总结出来，递归函数编写的难点和核心在于**如何划分数据为多层，并找到层与层之间的关系**，如果弄清楚这些，再通过更改划分数据的方式，可以找到层与层之间的关系的规模，这也就是迭代解题的规律。
+
+如果你不信，继续看下面这个题。
+
+## 链表翻转
+
+这题来源于[`leetcode`上面的206号问题](https://leetcode-cn.com/problems/reverse-linked-list/)，想当初自己就是从这个问题开始刷`leetcode`的，所以以现在的我，再去审视一下这个题，觉得可以深挖的地方还是有很多。话不多说，盘它。
+
+我还是以递归作为切入，通过更改划分数据的方式，最终给出迭代的解法。所以还是按照前面给出的递归的步骤，一步一步编写递归函数。至于使用栈实现链表翻转的方式，在此并不作介绍。
+
+**1. 定义递归函数`ListNode* reverseList(ListNode* head)` 的功能，明确参数以及返回值的意义**
+
+第一步总是很简单的，基本上题目让我们干什么，我们就把递归函数的功能定义成什么。所以这个函数的功能定义也很简单，就是翻转以`head`为头节点的链表，并且返回翻转后链表的头节点，也应该是原链表的尾节点。这里为了方便表达，还是用图的形式表达一下，其中绿色的部分代表递归函数作用的范围。
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://tva1.sinaimg.cn/large/007S8ZIlly1ge646mskm8j315007eq3f.jpg" 
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">原链表</div>
+</center>
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://tva1.sinaimg.cn/large/007S8ZIlly1ge6470o4zvj317408eaal.jpg" 
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">递归作用的范围</div>
+</center>
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://cdn.jsdelivr.net/gh/jackymxp/image-bed/leetcode/20200425204819.png" 
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">经递归作用后，期望的链表结构</div>
+</center>
+
+
+```
+1->2->3->4->5->N
+
+*********************
+* 1->2->3->4->5->N  *
+*********************
+
+5->4->3->2->1->N
+```
+
+**2. 确定递归函数的退出条件**
+
+想一下，当链表长度$$n$$为什么时候不能再将链表划分为两个部分呢？很显然，当链表长度为$$1$$或者$$0$$的时候，就不能再划分了，也就是递归退出条件。写成代码。
+```cpp
+if(head == nullptr || head->next == nullptr)
+    return head;
+```
+
+**3. 划分数据为多层，并梳理层与层之间的关系**
+
+明确一下，这里数据规模应该是链表的长度$$n$$，问题是，我们如何划分数据以使得数据规模向递归的退出条件靠近。
+
+这里我们首先将长度$$n$$的链表拆分成长度分别为$$n-1$$和$$1$$两个部分。这样每次递减$$1$$，经过$$n-1$$次就到达了递归退出条件。那么上面提过，此时应该将$$n-1$$部分重新作为递归的参数，这样长度为$$n-1$$的链表部分就完成了翻转。
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://cdn.jsdelivr.net/gh/jackymxp/image-bed/leetcode/20200425203636.png" 
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">拆分数据，并将n-1部分作为递归的参数</div>
+</center>
+
+当`reverseList(newHead)`执行完后，以`newHead`为头节点的链表就已经完成了翻转，如果你要问我为什么啊，我就告诉你，你没有掌握编写递归函数的精髓。这里就是要放弃思考为什么完成了翻转，就直接用已经翻转后的结果来构建最终的答案就可以了。
+
+当`reverseList(newHead)`执行完后，整个链表变成如下这个样子。
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://tva1.sinaimg.cn/large/007S8ZIlly1ge6azpuybmj31d20ggabx.jpg"
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">当n-1部分执行完后链表结构以及期望的链表结构</div>
+</center>
+
+对比和我们期望的链表的结构之间的差异，只需要更改`newHead`节点和`head`节点的`next`指针就可以了。所以这部分代码
+```cpp
+ListNode* reverseList(ListNode* head) {
+    //当只有一个节点的时候，就是递归退出条件
+    if(head == nullptr || head->next == nullptr)
+        return head;
+    //将链表分为两个部分
+    ListNode* newHead = head->next;
+    head->next = nullptr;
+    //n-1部分送去递归，完成翻转
+    ListNode* retHead = reverseList(newHead);
+    //改变指针指向
+    newHead->next = head;
+    head->next = nullptr;
+    return retHead;
+}
+```
+
+**4. 思考**
+
+我们还是思考上面递归的过程，每调用一次递归函数只能完成一个节点的翻转，如果链表的长度为$$n$$，则需要执行$$n-1$$次递归函数。
+
+为了向迭代方向靠近，要更改划分数据的方式，这次我们将长度为$$n$$的链表划分为长度分别为$$n-2$$和$$2$$两个部分。这样划分数据后，当链表长度小于等于$$2$$的时候，应该也是递归的退出条件。此时每调用一次递归函数的时候，就完成两个节点的翻转，所以当链表长度为$$n$$的时候，需要调用$$n/2$$次递归函数。
+```cpp
+//链表节点小于等于1的时候，直接退出
+if(head == nullptr || head->next == nullptr)
+    return head;
+//链表节点等于2的是，就翻转就的了
+if(head->next->next == nullptr){
+    ListNode* retHead = head->next;
+    head->next = nullptr;
+    retHead->next = head;
+    return retHead;
+}
+```
+
+接下来的问题就是，如何翻转长度为$$n-2$$链表的长度，咦，这时候如果你不知道，请翻看递归函数的功能是怎么定义的，就是直接调用`reverseList(newHead)`函数就可以完成翻转。
+
+此时链表的结构应该如下图所示。
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://tva1.sinaimg.cn/large/007S8ZIlly1gehku4lnd0j31g00ow7e5.jpg"
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">当n-1部分执行完后链表结构以及期望的链表结构</div>
+</center>
+
+如果你问我，为什么调用`reverseList(newHead)`这个就完成了以`newHead`为头节点的链表呢？其实这个我是很难回答你的，毕竟我已经放弃思考这里了，而是直接用这里的结论来构建最终答案。当执行完`reverseList(newHead)`后链表的结构。
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://tva1.sinaimg.cn/large/007S8ZIlly1ge6c919qbkj31eo0fwgnh.jpg"
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">当n-2部分执行完后链表结构以及期望的链表结构</div>
+</center>
+
+对比和期望的结果之间的差异，这个就是层与层之间的关系，只需要分别改变`head`、`head->next`和`newHead`的`next`指针指向就可以了。写成代码：
+```cpp
+ListNode* reverseList(ListNode* head) {
+    if(head == nullptr || head->next == nullptr)
+        return head;
+    if(head->next->next == nullptr){
+        ListNode* retHead = head->next;
+        retHead->next = head;
+        head->next = nullptr;
+        return retHead;
+    }
+    //拆分数据
+    ListNode* newHead = head->next->next;
+    head->next->next = nullptr;
+    //翻转长度为n-2部分
+    ListNode* retHead = reverseList(newHead);
+    //改变指针指向
+    newHead->next = head->next;
+    head->next->next = head;
+    head->next = nullptr;
+    return retHead;
+}
+```
+
+其实为了更快的收敛，也就是减少递归调用的次数，我们可以换一种拆分数据的方式，将长度为$$n$$的链表拆分成$$n-3$$和$$3$$两部分，但是这样做，递归的退出条件就需要考虑$$n=0$$、$$n=1$$、$$n=2$$、$$n=3$$这几种情况，编写起来就有些麻烦，所以还是总结一下递归中是如何完成$$n=2$$部分翻转的，这样对迭代的代码编写有好处。
+
+我们可以看到，当$$n=2$$时，翻转链表时，首先要保存下一个节点为`next`，然后将本节点`cur`的`next`指针指向了上一个节点`pre`，最后分别向后移动本节点`cur`和上一个节点`pre`。
+
+根据上述分析，初始化时，`cur`应当初始化为链表的头节点`head`，`next`指针初始化为`cur->next`，重点是`pre`应该初始化为什么？
+
+其实可以从递归退出中寻找答案，当只有两个节点的时候，我们最后都有一句`head->next == nullptr`。而在迭代的代码中，改变`cur->next = pre`。当`cur == head`的时候，`pre`应该为空，所以`pre`的初始化应该为`nullptr`。
+
+将上述分析的过程写成迭代代码
+```cpp
+ListNode* reverseList(ListNode* head) {
+    if(head == nullptr || head->next == nullptr)
+        return head;
+    ListNode* pre = nullptr;
+    ListNode* cur = head;
+    while(cur != nullptr){
+        //保存下一个节点
+        ListNode* next = cur->next;
+        //改变指向
+        cur->next = pre;
+        //同时前进一位
+        pre = cur;
+        cur = next;
+    }
+    return pre;
+}
+```
+
+这就是翻转链表的迭代代码，如果还没有清楚这个过程以及初始化三个变量的初值，我的建议是停止手中的键盘，拿起笔，多在纸上画画这个过程，就慢慢全明白了。
+
+当我们又会了迭代的代码的时候，重新思考一下递归的划分数据的思路，这里受到归并排序的启发，可以把长度为$$n$$的链表划分为长度分别为$$n/2$$和$$n/2$$两个部分，这样的话，效率是不是会更高一些呢？对于递归退出条件仍然是当$$n=0$$或者$$n=1$$的时候。所以问题的核心有两点，一是如何定位到链表的中间节点，二是这样划分数据的话，层与层之间的关系是怎么样的？
+首先解决第一个问题，其实这个问题在本章的前言中就已经交代清楚了，就是使用**快慢指针**了。**具体的策略就是快指针每次走两步，慢指针每次都一步**。写成代码。
+```cpp
+ListNode* fast = head;
+ListNode* mid = head;
+ListNode* slow = head;
+while(fast && fast->next){
+    fast = fast->next->next;
+    mid = slow;
+    slow = slow->next;
+}
+//将链表断开为两部分，一部分头节点是head, 另外一部分头节点为slow
+mid->next = nullptr;
+```
+
+接下来考虑层与层之间的关系，这部分还是画图思路比较明确。当我们拆分链表后，并对链表的两个部分分别使用递归函数作用后，链表的结构应该如下图所示。
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://tva1.sinaimg.cn/large/007S8ZIlly1gehkqcpmjtj314c0ju4m8.jpg"
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">两部分分别使用递归作用</div>
+</center>
+
+当递归函数完成后，链表应该变成如下的结构。
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://tva1.sinaimg.cn/large/007S8ZIlly1gehdlfvm33j314a0qm4qp.jpg"
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">当递归完成后，得到的链表结构与期望的结构之间的差异</div>
+</center>
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://tva1.sinaimg.cn/large/007S8ZIlly1gehdugd437j30yc0o2e4j.jpg"
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">当递归完成后，得到的链表结构与期望的结构之间的差异</div>
+</center>
+
+对于这两层之间的差异，只需要更改`slow`节点的`next`指针指向`retHead2`即可。写成代码。
+```cpp
+ListNode* reverseList(ListNode* head) {
+    if(!head || !head->next)
+        return head;
+    ListNode* fast = head;
+    ListNode* slow = head;
+    ListNode* mid = head;
+    while(fast && fast->next)
+    {
+        fast = fast->next->next;
+        mid = slow;
+        slow = slow->next;
+    }
+    mid->next = NULL;
+    ListNode* retHead2 = reverseList(head);
+    ListNode* retHead1 = reverseList(slow);
+    slow->next = retHead2;
+    return retHead1;
+}
+```
+
+这样划分数据的方式，在逻辑上非常清楚，但是在效率上并不高，这是为什么呢？
+
+因为递归的退出条件还是当$$n=1$$时退出，所以每调用一次递归函数只能翻转一个节点，翻转长度为$$n$$的链表需要调用递归的次数就是$$n-1$$，和将$$n$$拆分成$$n-1$$和$$1$$的策略中，递归执行的次数是一样的。但是这个效率浪费在了定位中点的过程上，而前面的划分策略上只需要一次就可以把数据划分开，所以导致效率会更慢。两者的效率差异主要体现在数据划分的方式上。
+
+经过以上的一系列操作，真的是把链表翻转都玩出花样了，那你还会不会翻转链表了。
+
+## 汉诺塔
+
+如果还不了解汉诺塔问题的，请百度一下。汉诺塔是我童年的一款经典的小游戏，我记得小时候在学习机上玩这个游戏，凭借自己出色的智商挣扎了好久把这个游戏玩到了第四关，在挣扎的过程中，我觉得这里面有一定的规律，如果想要移动四层，只要把前三层的都移动另辅助的柱子上就行了，接下来的操作就很简单了。但是一步一步想还是比较费脑子的。
+
+那时候，我就有一种强烈的想法就是，这个东西一定是有一定的规律和步骤的，但是这个步骤我要怎么才能生成呢？
+
+直到大一我学习了C语言，我知道这个使用递归可以求解的(所以说好好学习，可以解开原来的很多疑问)。但是课本很不友好的把汉诺塔问题作为递归的入门题，那真是一个噩梦般的存在。但是想一下，当时的噩梦是怎么形成的，因为前面学习了顺序结构选择结构等，到函数调用的时候，就进入被调用函数的内部，从来都是一条路跑到黑。
+
+到了学习递归的时候，仍然进入函数内部，但是还是本函数，所以调用调用着就凌乱了，{% em %}（**现在才知道，是我脑子的栈太小，小时候只能压4个盘子的栈，大于4个的时候就爆栈了**！){% endem %}每次都要进入递归函数内部看下究竟是怎么搬盘子的。所以带来这种噩梦的就是刨根问底这种思想带来的，如果你曾经和我一样，那么这个解题的套路就非常适合你了。
+
+经过了上面的递归函数的编写，我们用递归的角度重新审视一下汉诺塔问题。
+
+
+
+**1. 定义递归函数`void TowersOfHanoi(int n, char A, char B, char C)`的功能**
+
+借助B柱，将n个汉诺塔从A移动到C上。函数中，第一个变量是盘子的数量，第二个变量是盘子的起点，用A表示，第三个变量是枢纽站，用变量B表示，最后一个变量是盘子的终点，用变量C表示。
+
+**2. 递归函数的退出条件**
+
+这个很简单，当柱子上只有一个盘子的时候，也就是数据不能再进行划分的时候，就是递归的退出条件，所以只有一个盘子的时候，直接从起始点移动到终点就可以了。写成代码
+```cpp
+if(n == 1){
+    move(1, A, C);
+    return ;
+}
+```
+
+**3. 划分数据，并梳理层与层之间的关系**
+
+明确一点，这里的数据的规模就是盘子的个数$$n$$。问题来了，我们如何划分数据，使得向递归退出条件靠近呢？这里将$$n$$拆分成$$n-1$$和$$1$$两部分。如果想移动最后一个盘子，就需要把在上面$$n-1$$个盘子都移到辅助的柱子上。这里把第$$n$$个盘子看成一个，其余的$$n-1$$个盘子看成一个整体，就相当于有两个盘子。移动$$n$$个盘子的的步骤应该是这样。
+> 借助C柱子，把A柱子上的$$n-1$$个盘子全部移动到B柱子。
+> 
+> 将A柱子上第$$n$$个盘子，直接移动到C柱子。
+> 
+> 借助A柱子，把在B柱子上的$$n-1$$个盘子移动到C柱子。
+
+这样我们就完成了$$n$$个盘子的移动，如果你问我，怎么移动$$n-1$$个盘子，那我告诉你，你去问递归，他知道怎么移动。
+
+如果你问我，为什么递归可以完成$$n-1$$个盘子的移动啊？我就告诉你，你自己问你自己写的递归函数定义能够完成什么功能，也不要陷入到函数内部去看第$$n-2$$个盘子的移动轨迹，这里就是编写递归函数的精髓，放弃，而是直接使用这个结论，剩下的交给递归。
+
+如果你说，上面的我都懂了，我也知道从A移动$$n$$个盘子到C需要调用`TowersOfHanoi(n, A, B, C)`函数，问题是，借助C柱子，从A柱子移动$$n-1$$个盘子移动到B柱子需要调用什么函数呢？
+
+这个问题其实还是很简单的，原来我们编写的递归函数只有一个参数，所以从来没有说过递归参数的意义。
+
+本函数中参数有三个，所以就要注意一下递归函数中参数的意义了。记住一个事，函数中第一个参数代表盘子的个数，第二个参数代表盘子的起点，第三个参数表示枢纽的柱子，第四个参数表示盘子的终点。所以借助C柱子，移动$$n-1$$个盘子从A到B只需要调用`TowersOfHanoi(n-1, A, C, B)`。
+
+这样分析完之后，写下代码。
+```cpp
+inline void move(int n, char from, char to){
+    printf("%d  %c -->> %c\n", n, from, to);
+}
+void TowersOfHanoi(int n, char A, char B, char C){
+    if(n == 1){
+        move(1, A, C);
+        return ;
+    }
+    TowersOfHanoi(n-1, A, C, B);
+    move(n, A, C);
+    TowersOfHanoi(n-1, B, A, C);
+}
+```
+
+**4. 思考**
+
+和上面一样，如果我们还是将规模为$$n$$个盘子，划分成$$n-2$$和$$2$$两个部分，此时递归退出条件和递归的本体都应该进行改变，并且如果继续改变数据划分的方式，依然找不到任何有关迭代解法的规律。所以继续做下去已经没有必要了，因为我现在的脑子只能压两个盘子的栈就可以解决问题了。
+
+至于汉诺塔的非递归版本，主要是使用栈结构来模拟递归过程的系统栈的过程，因为在这里还没有说在计算机中内部递归的实现过程，所以关于汉诺塔的迭代版本，就暂时先不说，留到后续的章节说明。
+
+# 不容小觑的问题-递归的退出条件
+
+前面的小节中，我们把编写递归函数的重点都放在了时刻牢记递归函数的功能，以及如何划分数据，并且如何寻找层与层之间的关系上面，而递归函数的退出条件都比较简单，就没有说太多(本来也没啥太多说的)。虽然在大多数问题上递归函数的退出条件都非常简单，但是作为编写递归函数的三分之一，还是不可以忽略递归函数的退出条件的判断。
+
+下面就通过两个例题，来感受一下递归退出条件，仍然是编写递归函数的重点，不容小觑。
+
+下面的题目都是树专题的题目，听说递归和树专题更配，所以递归走起来，盘他。
+
+## 二叉树的最大深度
+
+这道题来自于`leetcode`的104号问题[二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)，题目的描述如下
+
+给定一个二叉树，找出其最大深度。
+
+二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+
+**说明:** 叶子节点是指没有子节点的节点。
+
+**示例：**
+给定二叉树 `[3,9,20,null,null,15,7]`，
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回它的最大深度 3 。
+
+**1. 定义递归函数`int maxDepth(TreeNode* root)`的功能，参数及返回值的意义**：
+
+计算一颗以`root`为跟节点的树的最大深度，并返回其深度的数值。
+
+**2. 递归函数的退出条件**
+
+这个是不是还是很简单，如果树只有一个节点，或者为空的时候，也就是说不能继续划分数据的时候，就是递归退出条件。写成代码：
+```cpp
+if(root == nullptr )
+    return 0;
+if(root->left == nullptr && root->right == nullptr)
+    return 1;
+```
+
+**3. 划分数据，并找到层与层之间的关系**
+
+对于链表，我们将链表直接断开就完成了数据的划分，对于二叉树，其实也很简单，无非就是分割它的左孩子或者右孩子分别作为一层，将整体作为一层，编写递归的核心就是，如何找到这两个层之间的关系。
+
+如果我们把它的左孩子和右孩子分割出来，分别求出左右孩子的最大深度`leftDepth`和`rightDepth`，那么整个树的最大深度就是左右孩子深度的最大值`max(leftDepth, rightDepth)`再加$$1$$就可以了。
+
+如果你问我，左孩子的最大深度怎么求，如果看到这里你还不会，洗洗睡吧，明天再看吧。牢记一个中心，我们定义的递归函数的功能，也就是直接调用`maxDepth(root->left)`就可以算出来左子树的最大深度。右子树同理。
+
+至于为什么说调用`maxDepth(root->left)`就可以算出来左子树的最大深度，请你放弃继续追踪到底的精神，放过你自己，因为你的大脑的栈跑不过计算机的栈。
+
+所以将上述过程写成代码
+```cpp
+int maxDepth(TreeNode* root){
+    if(root == nullptr) return 0;
+    if(root->left == nullptr && root->right == nullptr) return 1;
+    int leftDepth = maxDepth(root->left);
+    int rightDepth = maxDepth(root->right);
+    return max(leftDepth, rightDepth) + 1;
+}
+```
+
+**4. 思考**
+
+想一下，我们这里如何实现迭代版本呢？其实我还没有讲在计算机内部递归是如何运行的，这个小节我想放到讲树专题的时候再说这个，我先把这里流出来，不过事先剧透一下，有关树的迭代版本一般都是借助栈、队列实现的，也就是通过程序栈模拟在计算机的系统栈。所以在这里就直接给出非递归版本。
+
+```cpp
+int maxDepth(TreeNode* root) {
+    int max_dept = 0;
+    queue<pair<TreeNode*,int> >q;
+    q.push({root, 1});
+    while(!q.empty()) {
+        TreeNode* curr_node = q.front().first;
+        int curr_dept = q.front().second;
+        q.pop();
+        if(curr_node) {
+            max_dept =  max(curr_dept, max_dept);
+            q.push({curr_node->left, curr_dept+1});
+            q.push({curr_node->right, curr_dept+1});
+        }
+    }
+    return max_dept;
+}
+```
+
+
+## 二叉树的最小深度
+
+这题来源于`leetcode`上的111号问题，题目是让我们求[二叉树的最小深度](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)，题目描述：
+
+给定一个二叉树，找出其最小深度。
+
+最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+
+**说明:** 叶子节点是指没有子节点的节点。
+
+**示例:**
+
+给定二叉树 `[3,9,20,null,null,15,7]`,
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回它的最小深度  2.
+
+看到这个测试用例，有了上面的求树的最大深度基础，我不假思索的写出了第一个版本。
+
+```cpp
+int minDepth(TreeNode* root) {
+    if(!root)
+        return 0;
+    return 1 + min(minDepth(root->left), minDepth(root->right));
+}
+```
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 50%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://cdn.jsdelivr.net/gh/jackymxp/image-bed/leetcode/20200426160520.png"
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">这么牛逼的代码，就是我写的</div>
+</center>
+
+测试，提交。
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 50%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://cdn.jsdelivr.net/gh/jackymxp/image-bed/leetcode/20200426160846.png"
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">还得老老实实写代码</div>
+</center>
+
+
+所以我开始更改测试用例，当把测试用例改成如下的结构时
+
+```
+    3
+     \
+     20
+    /  \
+   15   7
+```
+
+预期结果应该是3，而我的答案返回了1，问题出在了哪里呢？
+
+后来经过我分析，我发现了端倪，问题就出在了我们一直忽视的递归退出条件(此刻的我真的觉得自己是一个侦探)。为什么呢？我们来分析一下。
+
+根据这个测试用例，仔细读题目描述，要求求根节点到叶子节点的最短路径，如果按照我们写的代码，在根为3的时候，左子树为空，所以就直接返回0，根本就没有访问到叶子节点嘛，所以才返回1的。那么正确的应该是放弃这个空的左子树，而只访问右子树。如果访问右子树，右子树应该返回2，加上根节点本身的高度，就应该返回3。问题就出在了当根节点的左孩子或者右孩子为空的时候，出现了bug。
+
+找到了问题，改起来就比较简单了，
+1. 当根节点的左子树为空的时候，应该只计算右子树的最小深度；
+2. 当根节点的右子树为空的时候，应该只计算左子树的最小深度；
+3. 都不为空的时候，计算左右子树的最小深度的最小值再加上根节点的高度。
+
+写成代码。
+
+```cpp
+int minDepth(TreeNode* root) {
+    if(root == nullptr)
+        return 0;
+    if(root->left == nullptr)
+        return 1 + minDepth(root->right);
+    if(root->right == nullptr)
+        return 1 + minDepth(root->left);      
+    return 1 + min(minDepth(root->left), minDepth(root->right));
+}
+```
+
+提交运行。
+
+<center>
+    <img style="border-radius: 0.3125em;
+    zoom: 100%;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.0),0 2px 10px 0 rgba(34,36,38,.0);" 
+    src="https://cdn.jsdelivr.net/gh/jackymxp/image-bed/leetcode/timg.gif"
+    alt="image-20200313213018498">
+    <br>
+    <div style="color:orange; 
+    border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #255;
+    padding: 2px;">我还是最牛逼的</div>
+</center>
+## 发生在我身上的真实案例
+
+笔者曾经在某公司的实习期间，实现radix-tree树增删改查遍历操等一系列函数，用递归实现的遍历。结果就出了问题，这个bug我找了将近两天，加班到凌晨三点多，终于定位到了在递归遍历的递归函数退出条件，结果只加了一个判断条件两行代码而已，就全跑通了。那时的我，又恨又气，觉得自己还是在细节之处多多打磨自己吧。
+
+这一小节，主要是想说明一个问题，就是递归的退出条件，虽然看起来都很简单，但是还要值得我们花费心思琢磨的，而不是想当然，想当然当然可以做对题，但是一旦出现问题，还是很费脑筋的，所以一开始就好好考虑递归条件吧。或者当我们的递归代码出现问题的时候，也不要想当然的认为递归条件就是对的，也许这就是潜在的bug。所以我在前面的汉诺塔递问题中，留下了一个坑，希望大家可以寻找一下。(我都放在了这个小节中说了，你应该知道问题大概在哪里)
+
+# 总结
+
+终于洋洋洒洒、磨磨唧唧、反反复复的写了这么多东西，总结一下本小节说的内容。
+
+一开始就直接给出了**如何理解递归和编写递归函数**。理解递归的核心就是相信递归能够解决问题以及放弃深入到递归函数内部摸清楚来龙去脉；至于如何编写递归函数，仿照数学归纳法的形式我给出了编写递归的三个步骤。随后按照给出的套路一步一步的通过几个例题编写递归函数，并且在例题中通过不同的数据划分形式，使用多种递归的方法解决问题，并且通过分析不同划分形式后，在递归中潜在的规律，一步一步引出迭代的写法。
+
+在第二小节介绍递归退出条件的时候，使用了树的题目，引出了递归函数在计算机内部是如何运行的，以什么机制运行递归的这个问题，至于这个问题，就有待于在树专题中进行介绍。在题目的最后增加了几个图片，怕读到这里，只是枯燥的文字，而错过了精彩的内容。除此之外，还在汉诺塔问题中留了一个坑，有待于我们发现。
+
+如果你看懂了上面的所有例题，我建议立刻拿起键盘，开始coding吧，享受这种编写递归的套路带来的乐趣，当然coding不是一个只看不练的过程，觉得自己看会了，等到复盘的时候，自已又会有很多细节不确定。甚至是确定了，但是还不知道为什么。这样是不可以的，所以立刻拿起键盘开始coding，不要只看不练。当然更建议大家准备纸笔，在关键之处用笔画画，按照套路写递归就是这么简单。
+
+最后用陆游的一句诗结束本小节。
+
+> [!WARNING|style:flat|lable:Mylable|labelVisibility:hidden|iconVisibility:hidden]
+> 纸上得来终觉浅
+> 
+> 绝知此事要躬行
+
+除此之外，记录一下在本小节留下的坑，以免忘记
+
+*   [ ]  汉诺塔问题中的坑
+*   [ ]  汉诺塔的非递归版本实现
+*   [ ]  打算这一节在树专题的第一小节，介绍在计算机内部递归运行的过程，顺带BFS，DFS，以及在树中这两种方式的框架
+
+
+<!--sec data-title="汉诺塔问题中的坑" data-id="section0" data-show=true ces-->
+当调用者调用的时候，`n`值传入一个0，这个函数立马就爆栈，因为找不到退出条件。虽然一般没人这么干，但是我们写代码，一定要防止有人这么干，毕竟调用你写的函数的，不一定是程序员。即使是程序员，万一是测试呢？
+<!--endsec-->
+
+![](https://cdn.jsdelivr.net/gh/jackymxp/image-bed/leetcode/博客配图.gif)
